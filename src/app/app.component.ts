@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, NgZone } from '@angular/core';
 import { } from '@types/googlemaps';
 import { LocationService } from './services/location.service';
 
@@ -9,8 +9,8 @@ import { LocationService } from './services/location.service';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit {
-  
-  title ='app';
+
+  title = 'app';
   latitude = 19.578418;
   longitude = 75.709007;
   locationList = [];
@@ -18,10 +18,16 @@ export class AppComponent implements OnInit {
   google: any;
   map: any;
   markers = [];
+  selectedMediaData = {
+    audios: [],
+    images: [],
+    videos: []
+  };
 
-  constructor(private locationService: LocationService) { }
-  
-  
+  constructor(private zone: NgZone,
+    private locationService: LocationService) { }
+
+
   createMarker(place) {
 
     var infowindow = new google.maps.InfoWindow({
@@ -38,13 +44,46 @@ export class AppComponent implements OnInit {
       icon: icon,
       title: place.vname || 'SafeOne'
     });
-    marker.addListener('click', function () {
+    marker.addListener('click', () => {
       infowindow.open(this.map, marker);
+      this.openMediaData(marker);
     });
+    marker.set('fbId', place.fbID);
     this.markers.push(marker);
   }
 
-  
+  openMediaData(marker: any) {
+
+    this.selectedMediaData.audios = [];
+    this.selectedMediaData.images = [];
+    this.selectedMediaData.videos = [];
+
+    if (marker.fbId) {
+      // Audo Data
+      this.locationService.getAudios(marker.fbId).then((data) => {
+        console.log("AuidoData >>>>>", data);
+        this.zone.run(() => {
+          this.selectedMediaData.audios = data;
+        });
+
+      });
+      // Video Data
+      this.locationService.getVideos(marker.fbId).then((data) => {
+        console.log("VideoData >> ", data);
+        this.zone.run(() => {
+          this.selectedMediaData.videos = data;
+        });
+      });
+      // Image Data
+      this.locationService.getImages(marker.fbId).then((data) => {
+        console.log("ImagData >> ", data);
+        this.zone.run(() => {
+          this.selectedMediaData.images = data;
+          // alert('updating data');
+        });
+      });
+    }
+  }
 
 
   createGeoXmanMarker(place) {
@@ -151,13 +190,8 @@ export class AppComponent implements OnInit {
       icon: icon,
       title: place.vname || 'SafeOne'
     });
-    marker.addListener('click', function () {
-      infowindow.open(this.map, marker);
-    });
     this.markers.push(marker);
   }
-
-
 
 
   ngOnInit() {
@@ -187,11 +221,9 @@ export class AppComponent implements OnInit {
         this.map.setCenter(initialLocation);
       });
     }
-    
+
   }
 
-
-  
   refreshVictimeData() {
     this.locationService.getAllVictims().then((locations) => {
       console.log('Victimsdata is here :: ', locations);
@@ -199,25 +231,25 @@ export class AppComponent implements OnInit {
         this.createMarker(locations[i]);
       }
 
-    this.refreshGeoxmanData();
-    this.refreshPoliceStationsData();
-    this.refreshHospitalData();
-    this.refreshLandmarkData();
-    this.refreshEZonesData();
+      this.refreshGeoxmanData();
+      this.refreshPoliceStationsData();
+      this.refreshHospitalData();
+      this.refreshLandmarkData();
+      this.refreshEZonesData();
     });
-    
+
   }
   refreshGeoxmanData() {
     this.locationService.getAllGeoXman().then((locations) => {
-      console.log('GeoXmandata is here :: ', locations);
+      // console.log('GeoXmandata is here :: ', locations);
       for (var i = 0; i < locations.length; i++) {
         this.createGeoXmanMarker(locations[i]);
       }
     });
   }
   refreshPoliceStationsData() {
-    this.locationService. getAllPoliceStations().then((locations) => {
-      console.log('PoliceStationsdata is here :: ', locations);
+    this.locationService.getAllPoliceStations().then((locations) => {
+      // console.log('PoliceStationsdata is here :: ', locations);
       for (var i = 0; i < locations.length; i++) {
         this.createPoliceStationMarker(locations[i]);
       }
@@ -225,33 +257,31 @@ export class AppComponent implements OnInit {
   }
   refreshHospitalData() {
     this.locationService.getAllHospitals().then((geospot) => {
-      console.log('Hospitalsdata is here :: ', geospot);
+      // console.log('Hospitalsdata is here :: ', geospot);
       for (var i = 0; i < geospot.length; i++) {
-        this. createHospitalMarker(geospot[i]);
+        this.createHospitalMarker(geospot[i]);
       }
     });
   }
   refreshLandmarkData() {
     this.locationService.getAllLandmarks().then((latlong) => {
-      console.log('Landmarksdata is here :: ', latlong);
+      // console.log('Landmarksdata is here :: ', latlong);
       for (var i = 0; i < latlong.length; i++) {
         this.createLandmaeksMarker(latlong[i]);
       }
     });
   }
 
- 
-refreshEZonesData(){
-  {
-    this.locationService.getAllEZones().then((LONGITUDE) => {
-      console.log('EZonesdata is here :: ', LONGITUDE);
-      for (var i = 0; i < LONGITUDE.length; i++) {
-        this.createEZonesMarker(LONGITUDE[i]);
-      }
-    });
+
+  refreshEZonesData() {
+    {
+      this.locationService.getAllEZones().then((LONGITUDE) => {
+        // console.log('EZonesdata is here :: ', LONGITUDE);
+        for (var i = 0; i < LONGITUDE.length; i++) {
+          this.createEZonesMarker(LONGITUDE[i]);
+        }
+      });
+    }
   }
-}
-
-
 
 }

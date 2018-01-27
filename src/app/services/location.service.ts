@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import * as Parse from 'parse';
 // Get your favorite AsyncStorage handler with import (ES6) or require
 import { AsyncStorage } from 'react-native';
+import { debug } from 'util';
 
 
 @Injectable()
@@ -214,7 +215,8 @@ export class LocationService {
     });
 
   }
-//get all safe zones
+
+ // get all safe zones
   getAllEZones(): Promise<any[]> {
 
     return new Promise((resolve, reject) => {
@@ -234,8 +236,8 @@ export class LocationService {
                 DISTRICT: object.get("DISTRICT"),
                 STATE: object.get("STATE"),
                 EMAIL:object.get("EMAIL"),
-                lat: object.get("LATITUDE").LATITUDE,
-                lng: object.get("LONGITUDE").LONGITUDE
+                lat: object.get("LATITUDE"),
+                lng: object.get("LONGITUDE")
               }
               ezonesList.push(ezones);
               if (results.length - 1 === i) {
@@ -349,6 +351,119 @@ export class LocationService {
     return contentString;
   }
 
+  getAudios(fbID: number): Promise<any[]> {
+
+    return new Promise((resolve, reject) => {
+
+      let audioCollection = Parse.Object.extend('EmergencyAudio');
+      var query = new Parse.Query(audioCollection);
+      query.equalTo('fbID', fbID);
+      query.find({
+        success: function (results) {
+          // debugger;
+          if (results.length > 0) {
+            var audioList = [];
+            for (var i = 0; i < results.length; i++) {
+              var object = results[i];
+              var audio = {
+                audio_url: object.get("AudioFile").url(),
+                name: object.get("AudioName"),
+                date: object.get("date")
+              }
+              audioList.push(audio);
+              if (results.length - 1 === i) {
+                return resolve(audioList);
+              }
+            }
+          } else {
+            return resolve([]);
+          }
+        },
+        error: function (error) {
+          console.log("Error: " + error.code + " " + error.message);
+          return reject(error);
+        }
+      });
+
+    });
+
+  }
+
+
+  getVideos(fbID: number): Promise<any[]> {
+
+    return new Promise((resolve, reject) => {
+
+      let videoCollection = Parse.Object.extend('EmergencyVideo');
+      var query = new Parse.Query(videoCollection);
+      query.equalTo('fbID', fbID);
+      query.find({
+        success: function (results) {
+          // debugger;
+          if (results.length > 0) {
+            var videoList = [];
+            for (var i = 0; i < results.length; i++) {
+              var object = results[i];
+              var video = {
+                video_url: "",
+                name: object.get("VideoName"),
+                date: object.get("date")
+              };
+              videoList.push(video);
+              if (results.length - 1 === i) {
+                return resolve(videoList);
+              }
+            }
+          } else {
+            return resolve([]);
+          }
+        },
+        error: function (error) {
+          console.log("Error: " + error.code + " " + error.message);
+          return reject(error);
+        }
+      });
+    });
+
+  }
+
+  getImages(fbID: number): Promise<any[]> {
+
+    return new Promise((resolve, reject) => {
+
+      let imageCollection = Parse.Object.extend('EmergencyImage');
+      var query = new Parse.Query(imageCollection);
+      query.equalTo('fbID', fbID);
+      query.find({
+        success: function (results) {
+          // debugger;
+          if (results.length > 0) {
+            var imageList = [];
+            for (var i = 0; i < results.length; i++) {
+              var object = results[i];
+              var image = {
+                photo_medium_url: object.get("photo_medium_url"),
+                photo_thumb_url: object.get("photo_thumb_url"),
+                photo_url: object.get("photo_url"),
+                date: object.get('date')
+              };
+              imageList.push(image);
+              if (results.length - 1 === i) {
+                return resolve(imageList);
+              }
+            }
+          } else {
+            return resolve([]);
+          }
+        },
+        error: function (error) {
+          console.log("Error: " + error.code + " " + error.message);
+          return reject(error);
+        }
+      });
+    });
+
+  }
 
   // For testing
   saveData() {

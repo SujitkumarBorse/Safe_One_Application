@@ -1,11 +1,17 @@
-a{    
+.a{    
     border-color:black;
     font-size: 200%;
     color: rgb(196, 190, 195);
 }
-button{
+.button{
     background-color:rgb(0, 0, 0);
     color: rgb(255, 255, 255);
     position:absolute;
     top:56px;
+}
+
+.image {
+    transform: rotate(90deg);
+    height: 100%;
+    width: 100%;
 }
