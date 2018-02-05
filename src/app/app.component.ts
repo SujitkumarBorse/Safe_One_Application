@@ -28,7 +28,7 @@ export class AppComponent implements OnInit {
     private locationService: LocationService) { }
 
 
-  createMarker(place) {
+  createMarker(place,isLastMarker?:boolean) {
 
     var infowindow = new google.maps.InfoWindow({
       content: this.locationService.createContentWindow(place)
@@ -44,6 +44,10 @@ export class AppComponent implements OnInit {
       icon: icon,
       title: place.vname || 'SafeOne'
     });
+    if(isLastMarker){
+      marker.setAnimation(google.maps.Animation.BOUNCE);
+    }
+    
     marker.addListener('click', () => {
       infowindow.open(this.map, marker);
       this.openMediaData(marker);
@@ -197,6 +201,9 @@ export class AppComponent implements OnInit {
     // Initialize parse server
     this.locationService.initializeParseServer();
     this.refreshVictimeData();
+    setInterval(()=>{
+      this.refreshVictimeData();
+    },10000)
   }
 
   initialize() {
@@ -224,7 +231,7 @@ export class AppComponent implements OnInit {
     this.locationService.getAllVictims().then((locations) => {
       console.log('Victimsdata is here :: ', locations);
       for (var i = 0; i < locations.length; i++) {
-        this.createMarker(locations[i]);
+        this.createMarker(locations[i], i === locations.length-1);
       }
 
       this.refreshGeoxmanData();
