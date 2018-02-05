@@ -14,4 +14,15 @@
     transform: rotate(90deg);
     height: 100%;
     width: 100%;
+    position: relative;
+    top: -490px;
+    right: -1296px;
 }
+.audio,video{
+    height: 75%;
+    width: 75%;
+    position: relative;
+    top: -490px;
+    right: -1336px;
+}
+

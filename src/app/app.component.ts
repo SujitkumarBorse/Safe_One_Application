@@ -85,7 +85,6 @@ export class AppComponent implements OnInit {
     }
   }
 
-
   createGeoXmanMarker(place) {
 
     var infowindow = new google.maps.InfoWindow({
@@ -193,15 +192,12 @@ export class AppComponent implements OnInit {
     this.markers.push(marker);
   }
 
-
   ngOnInit() {
     this.initialize();
     // Initialize parse server
     this.locationService.initializeParseServer();
     this.refreshVictimeData();
   }
-
-
 
   initialize() {
 
@@ -239,6 +235,7 @@ export class AppComponent implements OnInit {
     });
 
   }
+
   refreshGeoxmanData() {
     this.locationService.getAllGeoXman().then((locations) => {
       // console.log('GeoXmandata is here :: ', locations);
@@ -247,6 +244,7 @@ export class AppComponent implements OnInit {
       }
     });
   }
+  
   refreshPoliceStationsData() {
     this.locationService.getAllPoliceStations().then((locations) => {
       // console.log('PoliceStationsdata is here :: ', locations);

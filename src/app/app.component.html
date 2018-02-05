@@ -1,14 +1,14 @@
 <app-nav-bar></app-nav-bar>
 <div id="map"></div>
 
-<div class="row">
+<div class="column">
   <h4>Victim Images</h4>
   <div class="col-md-3" *ngFor="let image of selectedMediaData.images">
       <img class="image" [src]="image.photo_medium_url" alt="inn_logo">
   </div>
 </div>
 
-<div class="row">
+<div class="column">
   <h4>Audio</h4>
   <div class="col-md-3" *ngFor="let image of selectedMediaData.audios">
     <video controls>
@@ -17,7 +17,7 @@
   </div>
 </div>
 
-<div class="row">
+<div class="column">
   <h4>Videos</h4>
   <div class="col-md-3" *ngFor="let item of selectedMediaData.videos">
     <!-- <video controls>
