@@ -1,6 +1,8 @@
 import { Component, OnInit, NgZone } from '@angular/core';
 import { } from '@types/googlemaps';
 import { LocationService } from './services/location.service';
+import { ParseService } from './services/live-query.service';
+import { Observable } from 'rxjs/Observable';
 
 
 @Component({
@@ -25,7 +27,9 @@ export class AppComponent implements OnInit {
   };
 
   constructor(private zone: NgZone,
-    private locationService: LocationService) { }
+    private locationService: LocationService,
+    private parseService: ParseService
+  ) { }
 
 
   createMarker(place,isLastMarker?:boolean) {
@@ -63,7 +67,7 @@ export class AppComponent implements OnInit {
     this.selectedMediaData.videos = [];
 
     if (marker.fbId) {
-      // Audo Data
+      // Audio Data
       this.locationService.getAudios(marker.fbId).then((data) => {
         console.log("AuidoData >>>>>", data);
         this.zone.run(() => {
@@ -201,9 +205,16 @@ export class AppComponent implements OnInit {
     // Initialize parse server
     this.locationService.initializeParseServer();
     this.refreshVictimeData();
-    setInterval(()=>{
-      this.refreshVictimeData();
-    },10000)
+
+    // Initialize subscription
+    this.parseService.initialize();
+    console.log(' initialized parser');
+    // Create subscription
+    this.parseService.startSubscription();
+
+    // setInterval(()=>{
+    //   this.refreshVictimeData();
+    // },10000);
   }
 
   initialize() {
@@ -224,7 +235,32 @@ export class AppComponent implements OnInit {
         this.map.setCenter(initialLocation);
       });
     }
+  }
 
+  loadUnsafeZones() {
+    this.locationService.loadUnsafeZones().then((unsafeZones) => {
+      console.log('Data ', unsafeZones);
+      this.markUnsafeZones(unsafeZones);
+    });
+  }
+
+
+  markUnsafeZones(unsafeZones){
+    // Construct the circle for each value in unsafezone.
+    for (var zone in unsafeZones) {
+      // Add the circle for this city to the map.
+      var cityCircle = new google.maps.Circle({
+        strokeColor: '#FF0000',
+        strokeOpacity: 0.8,
+        strokeWeight: 2,
+        fillColor: '#FF0000',
+        fillOpacity: 0.35,
+        map: this.map,
+        center: new google.maps.LatLng(zone['lat'], zone['lng']),
+        radius: zone['radius'] * 1
+      });
+    }
+    console.log('Circle added ################ ', zone);
   }
 
   refreshVictimeData() {
@@ -232,16 +268,22 @@ export class AppComponent implements OnInit {
       console.log('Victimsdata is here :: ', locations);
       for (var i = 0; i < locations.length; i++) {
         this.createMarker(locations[i], i === locations.length-1);
+        // this.parseService.newsSubscription();
       }
-
-      this.refreshGeoxmanData();
-      this.refreshPoliceStationsData();
-      this.refreshHospitalData();
-      this.refreshLandmarkData();
-      this.refreshEZonesData();
+      // this.refreshGeoxmanData();
+      // this.refreshPoliceStationsData();
+      // this.refreshHospitalData();
+      // this.refreshLandmarkData();
+      // this.refreshEZonesData();
     });
 
   }
+
+
+  ngOnDestroy() {
+    this.parseService.stopUpdate()
+  }
+
 
   refreshGeoxmanData() {
     this.locationService.getAllGeoXman().then((locations) => {
@@ -276,7 +318,6 @@ export class AppComponent implements OnInit {
       }
     });
   }
-
 
   refreshEZonesData() {
     {

@@ -6,6 +6,7 @@ import { SideBarComponent } from './side-bar/side-bar.component';
 import { NavbarComponent } from './nav-bar/nav-bar.component';
 import { FooterComponent } from './footer/footer.component';
 import { LocationService } from './services/location.service';
+import { ParseService } from './services/live-query.service';
 
 
 @NgModule({
@@ -18,7 +19,7 @@ import { LocationService } from './services/location.service';
   imports: [
     BrowserModule
   ],
-  providers: [LocationService],
+  providers: [LocationService, ParseService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

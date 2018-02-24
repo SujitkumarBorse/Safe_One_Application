@@ -216,7 +216,7 @@ export class LocationService {
 
   }
 
- // get all safe zones
+  // get all safe zones
   getAllEZones(): Promise<any[]> {
 
     return new Promise((resolve, reject) => {
@@ -235,7 +235,7 @@ export class LocationService {
                 TAHSIL: object.get("TAHSIL"),
                 DISTRICT: object.get("DISTRICT"),
                 STATE: object.get("STATE"),
-                EMAIL:object.get("EMAIL"),
+                EMAIL: object.get("EMAIL"),
                 lat: object.get("LATITUDE"),
                 lng: object.get("LONGITUDE")
               }
@@ -255,6 +255,46 @@ export class LocationService {
     });
 
   }
+
+  // get all safe zones
+  loadUnsafeZones(): Promise<any[]> {
+
+    return new Promise((resolve, reject) => {
+
+      var unsafeZones = Parse.Object.extend("UnsafeZones");
+      var query = new Parse.Query(unsafeZones);
+
+      query.find({
+        success: function (results) {
+          if (results.length > 0) {
+            var unsafeZonesList = [];
+            for (var i = 0; i < results.length; i++) {
+              var object = results[i];
+              var ezones = {
+                address: object.get("address"),
+                name: object.get("name"),
+                zoneName: object.get("zoneName"),
+                radius: object.get("radious"),
+                lat: object.get("location")._latitude,
+                lng: object.get("location")._longitude
+              }
+              unsafeZonesList.push(ezones);
+              if (results.length - 1 === i) {
+                return resolve(unsafeZonesList);
+              }
+            }
+          }
+        },
+        error: function (error) {
+          console.log("Error: " + error.code + " " + error.message);
+          return reject(error);
+        }
+      });
+
+    });
+
+  }
+
 
   createEZoneswindow(data) {
     var contentString = '<div id="content">' +
@@ -488,6 +528,9 @@ export class LocationService {
       }
     });
 
-  }
 
+  }
+  createSubsrciption() {
+
+  }
 }

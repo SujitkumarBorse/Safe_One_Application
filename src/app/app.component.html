@@ -1,28 +1,34 @@
 <app-nav-bar></app-nav-bar>
-<div id="map"></div>
+<div class="column">
+
+  <div id="map">
+
+  </div>
+</div>
 
 <div class="column">
-  <h4>Victim Images</h4>
-  <div class="col-md-3" *ngFor="let image of selectedMediaData.images">
+  <div class="col-md-3">
+      <h4>Victim Images</h4>
+    <div *ngFor="let image of selectedMediaData.images">
+        
       <img class="image" [src]="image.photo_medium_url" alt="inn_logo">
-  </div>
-</div>
+    </div>
 
-<div class="column">
-  <h4>Audio</h4>
-  <div class="col-md-3" *ngFor="let image of selectedMediaData.audios">
-    <video controls>
-      <source [src]="image.audio_url" type="video/mp4">
-    </video>
-  </div>
-</div>
+    <h4>Audio</h4>
+    <div *ngFor="let image of selectedMediaData.audios">
+        
+      <video controls>
+        <source [src]="image.audio_url" type="video/mp4">
+      </video>
+    </div>
 
-<div class="column">
-  <h4>Videos</h4>
-  <div class="col-md-3" *ngFor="let item of selectedMediaData.videos">
-    <!-- <video controls>
+    <h4>Videos</h4>
+    <div *ngFor="let item of selectedMediaData.videos">
+        
+      <!-- <video controls>
       <source [src]="item.audio_url" type="video/mp4">
     </video> -->
+    </div>
   </div>
 </div>
 <!-- <button type="button" class="btn btn-primary" (click)="refreshVictimeData()">Refresh Victim Data</button> -->
