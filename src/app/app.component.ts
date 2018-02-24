@@ -3,7 +3,8 @@ import { } from '@types/googlemaps';
 import { LocationService } from './services/location.service';
 import { ParseService } from './services/live-query.service';
 import { Observable } from 'rxjs/Observable';
-
+import * as _ from 'lodash';
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-root',
@@ -19,7 +20,20 @@ export class AppComponent implements OnInit {
   locationChosen = false;
   google: any;
   map: any;
+  
   markers = [];
+  victimsMarkers = [];
+  investigatorsMarkers = [];
+  polisStationMarkers = [];
+  hospitalMarkers = [];
+  eZonesMarkers = [];
+  landMarkMarkers = [];
+  // this.refreshGeoxmanData();
+  // this.refreshPoliceStationsData();
+  // this.refreshHospitalData();
+  // this.refreshLandmarkData();
+  // this.refreshEZonesData();
+
   selectedMediaData = {
     audios: [],
     images: [],
@@ -112,7 +126,7 @@ export class AppComponent implements OnInit {
     marker.addListener('click', function () {
       infowindow.open(this.map, marker);
     });
-    this.markers.push(marker);
+    this.victimsMarkers.push(marker);
   }
 
   createPoliceStationMarker(place) {
@@ -134,7 +148,7 @@ export class AppComponent implements OnInit {
     marker.addListener('click', function () {
       infowindow.open(this.map, marker);
     });
-    this.markers.push(marker);
+    this.polisStationMarkers.push(marker);
   }
 
   createHospitalMarker(place) {
@@ -156,7 +170,7 @@ export class AppComponent implements OnInit {
     marker.addListener('click', function () {
       infowindow.open(this.map, marker);
     });
-    this.markers.push(marker);
+    this.hospitalMarkers.push(marker);
   }
 
   createLandmaeksMarker(place) {
@@ -178,7 +192,7 @@ export class AppComponent implements OnInit {
     marker.addListener('click', function () {
       infowindow.open(this.map, marker);
     });
-    this.markers.push(marker);
+    this.landMarkMarkers.push(marker);
   }
 
   createEZonesMarker(place) {
@@ -197,7 +211,7 @@ export class AppComponent implements OnInit {
       icon: icon,
       title: place.vname || 'SafeOne'
     });
-    this.markers.push(marker);
+    this.eZonesMarkers.push(marker);
   }
 
   ngOnInit() {
@@ -205,16 +219,15 @@ export class AppComponent implements OnInit {
     // Initialize parse server
     this.locationService.initializeParseServer();
     this.refreshVictimeData();
-
     // Initialize subscription
     this.parseService.initialize();
     console.log(' initialized parser');
     // Create subscription
     this.parseService.startSubscription();
-
     // setInterval(()=>{
     //   this.refreshVictimeData();
     // },10000);
+    this.loadUnsafeZones();
   }
 
   initialize() {
@@ -239,7 +252,7 @@ export class AppComponent implements OnInit {
 
   loadUnsafeZones() {
     this.locationService.loadUnsafeZones().then((unsafeZones) => {
-      console.log('Data ', unsafeZones);
+      console.log('Unsafe Zones Data ', unsafeZones);
       this.markUnsafeZones(unsafeZones);
     });
   }
@@ -247,7 +260,7 @@ export class AppComponent implements OnInit {
 
   markUnsafeZones(unsafeZones){
     // Construct the circle for each value in unsafezone.
-    for (var zone in unsafeZones) {
+    unsafeZones.forEach(zone => {
       // Add the circle for this city to the map.
       var cityCircle = new google.maps.Circle({
         strokeColor: '#FF0000',
@@ -256,34 +269,41 @@ export class AppComponent implements OnInit {
         fillColor: '#FF0000',
         fillOpacity: 0.35,
         map: this.map,
-        center: new google.maps.LatLng(zone['lat'], zone['lng']),
+        center: {lat : zone['lat'], lng : zone['lng']},
         radius: zone['radius'] * 1
       });
-    }
-    console.log('Circle added ################ ', zone);
+    });
   }
 
   refreshVictimeData() {
     this.locationService.getAllVictims().then((locations) => {
-      console.log('Victimsdata is here :: ', locations);
+      locations = _.sortBy(locations, (o) => { return moment(o.date); });
       for (var i = 0; i < locations.length; i++) {
         this.createMarker(locations[i], i === locations.length-1);
-        // this.parseService.newsSubscription();
       }
-      // this.refreshGeoxmanData();
-      // this.refreshPoliceStationsData();
-      // this.refreshHospitalData();
-      // this.refreshLandmarkData();
-      // this.refreshEZonesData();
+      // Add a marker clusterer to manage the markers.
+      var markerCluster = new MarkerClusterer(this.map, this.markers, {
+        gridSize: 50,
+        styles: [{
+          textColor: 'white',
+          url: 'assets/images/m1.png',
+          height: 50,
+          width: 50
+        }],
+        maxZoom: 15
+      });
+      this.refreshGeoxmanData();
+      this.refreshPoliceStationsData();
+      this.refreshHospitalData();
+      this.refreshLandmarkData();
+      this.refreshEZonesData();
     });
 
   }
 
-
   ngOnDestroy() {
     this.parseService.stopUpdate()
   }
-
 
   refreshGeoxmanData() {
     this.locationService.getAllGeoXman().then((locations) => {
@@ -291,6 +311,17 @@ export class AppComponent implements OnInit {
       for (var i = 0; i < locations.length; i++) {
         this.createGeoXmanMarker(locations[i]);
       }
+      // Add a marker clusterer to manage the markers.
+      var markerCluster = new MarkerClusterer(this.map, this.investigatorsMarkers,{
+        gridSize: 50,
+        styles: [{
+          textColor: 'white',
+          url: 'assets/images/m2.png',
+          height: 50,
+          width: 50
+        }],
+        maxZoom: 15
+      });
     });
   }
   
@@ -300,34 +331,84 @@ export class AppComponent implements OnInit {
       for (var i = 0; i < locations.length; i++) {
         this.createPoliceStationMarker(locations[i]);
       }
+      // Add a marker clusterer to manage the markers.
+      var markerCluster = new MarkerClusterer(this.map, this.polisStationMarkers,{
+        gridSize: 50,
+        styles: [{
+          textColor: 'white',
+          url: 'assets/images/m3.png',
+          height: 50,
+          width: 50
+        }],
+        maxZoom: 15
+      }
+      );
     });
   }
+
   refreshHospitalData() {
     this.locationService.getAllHospitals().then((geospot) => {
       // console.log('Hospitalsdata is here :: ', geospot);
       for (var i = 0; i < geospot.length; i++) {
         this.createHospitalMarker(geospot[i]);
       }
+      // Add a marker clusterer to manage the markers.
+      var markerCluster = new MarkerClusterer(this.map, this.hospitalMarkers,{
+        gridSize: 50,
+        styles: [{
+          textColor: 'white',
+          url: 'assets/images/hospital.png',
+          height: 50,
+          width: 50
+        }],
+        maxZoom: 15
+      }
+      );
+
     });
   }
+
   refreshLandmarkData() {
     this.locationService.getAllLandmarks().then((latlong) => {
       // console.log('Landmarksdata is here :: ', latlong);
       for (var i = 0; i < latlong.length; i++) {
         this.createLandmaeksMarker(latlong[i]);
       }
+      // Add a marker clusterer to manage the markers.
+      var markerCluster = new MarkerClusterer(this.map, this.landMarkMarkers,{
+        gridSize: 50,
+        styles: [{
+          textColor: 'white',
+          url: 'assets/images/m4.png',
+          height: 50,
+          width: 50
+        }],
+        maxZoom: 15
+      }
+      );
+
     });
   }
 
   refreshEZonesData() {
-    {
       this.locationService.getAllEZones().then((LONGITUDE) => {
         // console.log('EZonesdata is here :: ', LONGITUDE);
         for (var i = 0; i < LONGITUDE.length; i++) {
           this.createEZonesMarker(LONGITUDE[i]);
         }
+        // Add a marker clusterer to manage the markers.
+        var markerCluster = new MarkerClusterer(this.map, this.eZonesMarkers,{
+          gridSize: 50,
+          styles: [{
+            textColor: 'white',
+            url: 'assets/images/m5.png',
+            height: 50,
+            width: 50
+          }],
+          maxZoom: 15
+        });
+
       });
     }
-  }
 
 }

@@ -26,3 +26,35 @@
     right: -1336px;
 }
 
+
+.button-victim {
+    border: none;
+    background: url('../assets/images/victim_red_marker.png') no-repeat top left;
+    padding: 2px 8px;
+}
+
+.button-geoxman {
+    border: none;
+    background: url('../assets/images/investigator_marker.png') no-repeat top left;
+    padding: 2px 8px;
+}
+.button-police {
+    border: none;
+    background: url('../assets/images/police_station_marker.png') no-repeat top left;
+    padding: 2px 8px;
+}
+.button-landmark {
+    border: none;
+    background: url('../assets/images/landmark_marker.png') no-repeat top left;
+    padding: 2px 8px;
+}
+.button-ezone {
+    border: none;
+    background: url('../assets/images/safezone_marker.png') no-repeat top left;
+    padding: 2px 8px;
+}
+.button-hospital {
+    border: none;
+    background: url('../assets/images/hospital_marker.png') no-repeat top left;
+    padding: 2px 8px;
+}
