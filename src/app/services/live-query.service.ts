@@ -14,7 +14,7 @@ export class ParseService {
     Parse.serverURL = 'http://103.224.247.55:1001/parse';
   }
 
-  initialize(){
+  initialize() {
     this.subscription = this.newsSubscription();
   }
 
@@ -25,33 +25,41 @@ export class ParseService {
     // this.newsQuery.equalTo('title', 'broadcast');
     return this.newsQuery.subscribe();
   }
-  
+
   startSubscription() {
 
-    this.subscription.on("open", function (message) {
-      console.log("Victim activity tracking mode activated");
-      // TODO: Add to victims arrary
-    });
+    return Observable.create(observer => {
 
-    this.subscription.on("create", function (message) {
-      console.log("New victim created");
-      // TODO: Add to victims arrary
-    });
+      this.subscription.on("open", (message) => {
+        console.log("Victim activity tracking mode activated");
+        // TODO: Add to victims arrary
+        observer.next(message);
+      });
 
-    this.subscription.on('update', (data) => {
-      console.log("Victim's data updated", data);
-      // TODO: Victims data updated
-    });
+      this.subscription.on("create", (message) => {
+        console.log("New victim created");
+        // TODO: Add to victims arrary
+        observer.next(message);
+      });
 
-    this.subscription.on('enter', (data) => {
-      console.log("Victim's data updated", data);
-    });
+      this.subscription.on('update', (data) => {
+        console.log("Victim's data updated", data);
+        // TODO: Victims data updated
+        observer.next(data);
+      });
 
-    this.subscription.on("leave", function (obj) {
-      console.log("Victim deleted");
-      // TODO: Remove from victims arrary
-    });
+      this.subscription.on('enter', (data) => {
+        console.log("Victim's data updated", data);
+        observer.next(data);
+      });
 
+      this.subscription.on("leave", (obj) => {
+        console.log("Victim deleted");
+        // TODO: Remove from victims arrary
+        observer.next(obj);
+      });
+
+    });
   }
 
 

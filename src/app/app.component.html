@@ -3,8 +3,18 @@
   <div id="map">
   </div>
 </div>
+
 <div class="row">
-  <div class="col-md-12">
+  <div class="col-md-12 text-center">
+    <select name="state_list" [(ngModel)]="selectedState" (change)="setCenterRegion()">
+        <option value="">Select</option>
+      <option *ngFor="let state of regionData" [ngValue]="state">{{state.name}}</option>
+    </select>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-12" id="buttons">
     <button type="button" class="btn btn-default button-victim" (click)="refreshVictimeData()"></button>
     <button type="button" class="btn btn-default button-geoxman" (click)="refreshVictimeData()"></button>
     <button type="button" class="btn btn-default button-police" (click)="refreshVictimeData()"></button>
@@ -16,20 +26,20 @@
 
 <div class="column">
   <div class="col-md-3">
-    <h4>Victim Images</h4>
+    <!-- <h4>Victim Images</h4> -->
     <div *ngFor="let image of selectedMediaData.images">
 
       <img class="image" [src]="image.photo_medium_url" alt="inn_logo">
     </div>
 
-    <h4>Audio</h4>
+    <!-- <h4>Audio</h4> -->
     <div *ngFor="let image of selectedMediaData.audios">
       <video controls>
         <source [src]="image.audio_url" type="video/mp4">
       </video>
     </div>
 
-    <h4>Videos</h4>
+    <!-- <h4>Videos</h4> -->
     <div *ngFor="let item of selectedMediaData.videos">
 
       <!-- <video controls>
