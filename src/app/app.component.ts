@@ -23,7 +23,14 @@ export class AppComponent implements OnInit {
   google: any;
   map: any;
   position:any;
-  selectedState = "";
+  selectedState: any;
+
+  showVictimeData = false;
+  showGeoxmanData = false;
+  showPoliceData = false;
+  showLandmarkData = false;
+  showEzoneData = false;
+  showHospitalData = false;
 
 
   regionData = [{
@@ -245,16 +252,12 @@ export class AppComponent implements OnInit {
 
   markers = [];
   victimsMarkers = [];
+  geoXmanMarkers = [];
   investigatorsMarkers = [];
   polisStationMarkers = [];
   hospitalMarkers = [];
   eZonesMarkers = [];
   landMarkMarkers = [];
-  // this.refreshGeoxmanData();
-  // this.refreshPoliceStationsData();
-  // this.refreshHospitalData();
-  // this.refreshLandmarkData();
-  // this.refreshEZonesData();
 
   selectedMediaData = {
     audios: [],
@@ -266,6 +269,74 @@ export class AppComponent implements OnInit {
     private locationService: LocationService,
     private parseService: ParseService
   ) { }
+
+
+  // Sets the map on all markers in the array.
+  removeMarker(markers) {
+    for (var i = 0; i < markers.length; i++) {
+      markers[i].setMap(null);
+    }
+  }
+  
+  toggleVictimeData() {
+    this.showVictimeData = !this.showVictimeData;
+    if (this.showVictimeData) {
+      this.removeMarker(this.victimsMarkers);
+    } else {
+      this.refreshVictimeData(true);
+    }
+  };
+
+  toggleGeoxmanData() {
+    this.showGeoxmanData = !this.showGeoxmanData;
+    if (this.showGeoxmanData) {
+      this.removeMarker(this.geoXmanMarkers);
+    } else {
+      this.refreshGeoxmanData();
+    }
+
+  };
+
+  togglePoliceData() {
+    this.showPoliceData = !this.showPoliceData;
+    if (this.showPoliceData) {
+      this.removeMarker(this.polisStationMarkers);
+    } else {
+      this.refreshPoliceStationsData();
+    }
+
+  };
+
+  toggleLandmarkData() {
+    this.showLandmarkData =! this.showLandmarkData;
+    if (this.showLandmarkData) {
+      this.removeMarker(this.landMarkMarkers);
+    } else {
+      this.refreshLandmarkData();
+    }
+
+  };
+
+
+  toggleEzoneData() {
+    this.showEzoneData = !this.showEzoneData;
+    if (this.showEzoneData) {
+      this.removeMarker(this.showPoliceData);
+    } else {
+      this.refreshEZonesData();
+    }
+
+  };
+
+  toggleHospitalData() {
+    this.showHospitalData = !this.showHospitalData;
+    if (this.showHospitalData) {
+      this.removeMarker(this.eZonesMarkers);
+    } else {
+      this.refreshHospitalData();
+    }
+
+  };
 
 
   createMarker(place, isLastMarker?: boolean) {
@@ -297,7 +368,7 @@ export class AppComponent implements OnInit {
     this.markers.push(marker);
   }
 
-  setCenterRegion(latLng) {
+  setCenterRegion() {
     console.log('Setting center ', this.selectedState);
     this.map.setCenter(this.selectedState.position);
     google.maps.event.trigger(this.map, 'resize');
@@ -355,7 +426,7 @@ export class AppComponent implements OnInit {
     marker.addListener('click', function () {
       infowindow.open(this.map, marker);
     });
-    this.victimsMarkers.push(marker);
+    this.geoXmanMarkers.push(marker);
   }
 
   createPoliceStationMarker(place) {
