@@ -1,11 +1,7 @@
-#map {
-    width: 100%;
-    height: 550px;
-    top: 55px;
-}
 body{
     background-color:rgb(216, 214, 214);
 }
 html, body {
+    width: 100%;
     height: 100%;
 }

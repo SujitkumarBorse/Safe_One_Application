@@ -389,6 +389,7 @@ export class AppComponent implements OnInit {
 
     marker.addListener('click', () => {
       infowindow.open(this.map, marker);
+      this.openNav();
       this.openMediaData(marker);
     });
     marker.set('fbId', place.fbID);
@@ -835,6 +836,16 @@ export class AppComponent implements OnInit {
 
       });
     });
+  }
+
+  /* Open the sidenav */
+  openNav() {
+    document.getElementById("mySidenav").style.width = "100%";
+  }
+
+  /* Close/hide the sidenav */
+  closeNav() {
+    document.getElementById("mySidenav").style.width = "0";
   }
 
 }

@@ -1,50 +1,62 @@
 <app-nav-bar></app-nav-bar>
-<div class="column">
-  <div id="map">
-  </div>
-</div>
+<div id="mySidenav" class="sidenav" style="margin-top:3rem;">
+  <a href="javascript:void(0)" class="closebtn" (click)="closeNav()">&times;</a>
+  <!-- Page Content -->
+  <div class="container">
+    <h1 class="my-4 text-center text-lg-left" *ngIf="selectedMediaData.images.length === 0">No Media Present</h1>
+    <div class="row text-center text-lg-left">
 
-<div class="row">
-  <div class="col-md-12 text-center">
-    <select name="state_list" [(ngModel)]="selectedState" (change)="setCenterRegion()">
-        <option value="">Select</option>
-      <option *ngFor="let state of regionData" [ngValue]="state">{{state.name}}</option>
-    </select>
-  </div>
-</div>
+      <div class="col-lg-3 col-md-4 col-xs-6"  *ngFor="let image of selectedMediaData.images">
+        <a class="d-block mb-4 h-100">
+          <img class="img-fluid img-thumbnail" [src]="image.photo_medium_url" alt="">
+        </a>
+      </div>
 
-<div class="row">
-  <div class="col-md-12" id="buttons">
-    <button type="button" class="btn btn-default button-victim" (click)="toggleVictimeData()"></button>
-    <button type="button" class="btn btn-default button-geoxman" (click)="toggleGeoxmanData()"></button>
-    <button type="button" class="btn btn-default button-police" (click)="togglePoliceData()"></button>
-    <button type="button" class="btn btn-default button-landmark" (click)="toggleLandmarkData()"></button>
-    <button type="button" class="btn btn-default button-ezone" (click)="toggleEzoneData()"></button>
-    <button type="button" class="btn btn-default button-hospital" (click)="toggleHospitalData()"></button>
-  </div>
-</div>
+      <div class="col-lg-3 col-md-4 col-xs-6" *ngFor="let item of selectedMediaData.audios">
+        <a class="d-block mb-4 h-100">
+          <video controls>
+            <source [src]="item.audio_url" type="video/mp4">
+          </video>
+        </a>
+      </div>
+      
+      
+      <div class="col-lg-3 col-md-4 col-xs-6" *ngFor="let item of selectedMediaData.videos">
+        <a class="d-block mb-4 h-100">
+          <!-- <video controls>
+            <source [src]="item.audio_url" type="video/mp4">
+          </video> -->
+        </a>
+      </div>
 
-<div class="column">
-  <div class="col-md-3">
-    <!-- <h4>Victim Images</h4> -->
-    <div *ngFor="let image of selectedMediaData.images">
 
-      <img class="image" [src]="image.photo_medium_url" alt="inn_logo">
     </div>
-
-    <!-- <h4>Audio</h4> -->
-    <div *ngFor="let image of selectedMediaData.audios">
-      <video controls>
-        <source [src]="image.audio_url" type="video/mp4">
-      </video>
+  </div>
+  <!-- /.container -->
+</div>
+<div class="column" id="main" style="margin-top: 2.5rem;">
+  <!-- Use any element to open the sidenav -->
+  <!-- <button class="btn btn-primary" (click)="openNav()">Open</button> -->
+  <div class="row">
+    <div class="col-md-12">
+      <div id="map">
+      </div>    
     </div>
-
-    <!-- <h4>Videos</h4> -->
-    <div *ngFor="let item of selectedMediaData.videos">
-
-      <!-- <video controls>
-      <source [src]="item.audio_url" type="video/mp4">
-    </video> -->
+  </div>
+  <div class="row" style="margin-top:1rem">
+    <div class="col-md-6">
+        <select CLASS="form-control" name="state_list" [(ngModel)]="selectedState" (change)="setCenterRegion()">
+            <option value="">Select</option>
+          <option *ngFor="let state of regionData" [ngValue]="state">{{state.name}}</option>
+        </select>
+    </div>
+    <div class="col-md-6">
+        <button type="button" class="btn btn-default button-victim" (click)="toggleVictimeData()"></button>
+        <button type="button" class="btn btn-default button-geoxman" (click)="toggleGeoxmanData()"></button>
+        <button type="button" class="btn btn-default button-police" (click)="togglePoliceData()"></button>
+        <button type="button" class="btn btn-default button-landmark" (click)="toggleLandmarkData()"></button>
+        <button type="button" class="btn btn-default button-ezone" (click)="toggleEzoneData()"></button>
+        <button type="button" class="btn btn-default button-hospital" (click)="toggleHospitalData()"></button>
     </div>
   </div>
 </div>
