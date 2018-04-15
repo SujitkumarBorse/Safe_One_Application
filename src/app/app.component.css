@@ -1,10 +1,29 @@
 #map {
     width: 100%;
-    height: 500px;
+    height: 550px;
 }
   
+#wrapper { 
+    position: relative;
+}
 
-.a{    
+.map-buttons {
+    padding: 10px;
+    background: black;
+    filter: opacity(70%);
+    border-radius: 5px;
+}
+
+
+#over_map { 
+    position: absolute;
+    z-index: 99; 
+    width:100%;
+    bottom: 0;
+    margin-bottom: 20px;
+}
+
+.a {    
     border-color:black;
     font-size: 200%;
     color: rgb(196, 190, 195);
@@ -31,36 +50,48 @@
     text-align: center;
 }
 
+.btn-img-size {
+    height: 30px;  
+    width: 40px;
+    border-radius:5px;
+}
+
 .button-victim {
     border: none;
-    background: url('../assets/images/victim_red_marker.png') no-repeat top left;
-    padding: 10px 12px;
+    background: url('../assets/images/victim_red_marker.png') no-repeat;
+    background-position: center;
+    background-size: contain;
 }
 
 .button-geoxman {
     border: none;
-    background: url('../assets/images/investigator_marker.png') no-repeat top left;
-    padding: 10px 12px;
+    background: url('../assets/images/investigator_marker.png') no-repeat;
+    background-position: center;
+    background-size: contain;
 }
 .button-police {
     border: none;
-    background: url('../assets/images/police_station_marker.png') no-repeat top left;
-    padding: 10px 12px;
+    background: url('../assets/images/police_station_marker.png') no-repeat;
+    background-position: center;
+    background-size: contain;
 }
 .button-landmark {
     border: none;
-    background: url('../assets/images/landmark_marker.png') no-repeat top left;
-    padding: 10px 12px;
+    background: url('../assets/images/landmark_marker.png') no-repeat;
+    background-position: center;
+    background-size: contain;
 }
 .button-ezone {
     border: none;
-    background: url('../assets/images/safezone_marker.png') no-repeat top left;
-    padding: 10px 12px;
+    background: url('../assets/images/safezone_marker.png') no-repeat;
+    background-position: center;
+    background-size: contain;
 }
 .button-hospital {
     border: none;
-    background: url('../assets/images/hospital_marker.png') no-repeat top left;
-    padding: 10px 12px;
+    background: url('../assets/images/hospital_marker.png') no-repeat;
+    background-position: center;
+    background-size: contain;
 }
 
 /* The side navigation menu */

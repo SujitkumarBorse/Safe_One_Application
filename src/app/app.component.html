@@ -1,5 +1,19 @@
-<app-nav-bar></app-nav-bar>
-<div id="mySidenav" class="sidenav" style="margin-top:3rem;">
+<!-- <app-nav-bar></app-nav-bar> -->
+<div class="navbar navbar-expand-lg fixed-top navbar-dark bg-primary">
+  <div class="container">
+    <a href="../" class="navbar-brand">SafeOneApp</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive"
+      aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <select style="width:300px" class="form-control" name="state_list" [(ngModel)]="selectedState" (change)="setCenterRegion()">
+      <option value="">Select</option>
+      <option *ngFor="let state of regionData" [ngValue]="state">{{state.name}}</option>
+    </select>
+  </div>
+</div>
+
+<div id="mySidenav" class="sidenav" style="margin-top:3rem;z-index:110;">
   <a href="javascript:void(0)" class="closebtn" (click)="closeNav()">&times;</a>
   <!-- Page Content -->
   <div class="container">
@@ -33,16 +47,32 @@
   </div>
   <!-- /.container -->
 </div>
+
 <div class="column" id="main" style="margin-top: 2.5rem;">
   <!-- Use any element to open the sidenav -->
   <!-- <button class="btn btn-primary" (click)="openNav()">Open</button> -->
-  <div class="row">
-    <div class="col-md-12">
-      <div id="map">
-      </div>    
-    </div>
-  </div>
-  <div class="row" style="margin-top:1rem">
+  <!-- <div class="row">
+    <div class="col-md-12"> -->
+        <div id="wrapper">
+            <div id="map"></div>
+            <div id="over_map">
+                <div class="row">
+                    <div class="col-md-12 text-center">
+                      <div class="btn-group map-buttons">
+                          <button type="button" class="btn-img-size button-victim" (click)="toggleVictimeData()"></button>
+                          <button type="button" class="btn-img-size button-geoxman" (click)="toggleGeoxmanData()"></button>
+                          <button type="button" class="btn-img-size button-police" (click)="togglePoliceData()"></button>
+                          <button type="button" class="btn-img-size button-landmark" (click)="toggleLandmarkData()"></button>
+                          <button type="button" class="btn-img-size button-ezone" (click)="toggleEzoneData()"></button>
+                          <button type="button" class="btn-img-size button-hospital" (click)="toggleHospitalData()"></button>
+                      </div>
+                    </div>
+                  </div>                  
+            </div>
+          </div>
+    <!-- </div>
+  </div> -->
+  <!-- <div class="row" style="margin-top:1rem">
     <div class="col-md-6">
         <select CLASS="form-control" name="state_list" [(ngModel)]="selectedState" (change)="setCenterRegion()">
             <option value="">Select</option>
@@ -57,5 +87,5 @@
         <button type="button" class="btn btn-default button-ezone" (click)="toggleEzoneData()"></button>
         <button type="button" class="btn btn-default button-hospital" (click)="toggleHospitalData()"></button>
     </div>
-  </div>
+  </div> -->
 </div>

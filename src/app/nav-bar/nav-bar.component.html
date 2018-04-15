@@ -4,5 +4,9 @@
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
+      <select style="width:300px" class="form-control" name="state_list" [(ngModel)]="selectedState" (change)="setCenterRegion()">
+          <option value="">Select</option>
+        <option *ngFor="let state of regionData" [ngValue]="state">{{state.name}}</option>
+      </select>
     </div>
   </div>
