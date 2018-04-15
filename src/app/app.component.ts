@@ -551,6 +551,7 @@ export class AppComponent implements OnInit {
 
     // Create subscription
     this.parseService.startSubscription().subscribe((data) => {
+      debugger
       this.loadMarkes();
     });
 
@@ -571,7 +572,7 @@ export class AppComponent implements OnInit {
     var myLatlng = new google.maps.LatLng(18.5204, 73.8567);
 
     var mapOptions = {
-      zoom: 10,
+      zoom: 8,
       center: myLatlng,
       // mapTypeId: google.maps.MapTypeId.ROADMAP
     };
@@ -631,6 +632,7 @@ export class AppComponent implements OnInit {
       this.locationService.getAllVictims().then((locations) => {
         locations = _.sortBy(locations, (o) => { return moment(o.date); });
         for (var i = 0; i < locations.length; i++) {
+          console.log(' i ', location[i]);
           this.createMarker(locations[i], i === locations.length - 1);
         }
         // Add a marker clusterer to manage the markers.
@@ -847,5 +849,10 @@ export class AppComponent implements OnInit {
   closeNav() {
     document.getElementById("mySidenav").style.width = "0";
   }
+
+  getVodeoUrl() {
+    return 'http://clips.vorwaerts-gmbh.de/VfE_html5.mp4';
+  }
+
 
 }

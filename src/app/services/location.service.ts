@@ -35,7 +35,7 @@ export class LocationService {
             var victim = {
               vname: object.get("name"),
               userContact: object.get("userContact"),
-              date: object.get("date"),
+              date: object.get("updatedAt"),
               fbID: object.get("fbID"),
               lat: object.get("location").latitude,
               lng: object.get("location").longitude
