@@ -31,7 +31,7 @@ export class AppComponent implements OnInit {
   showLandmarkData = false;
   showEzoneData = false;
   showHospitalData = false;
-
+  showCCTVData = false;
 
   regionData = [{
     "name": "Andaman",
@@ -258,6 +258,7 @@ export class AppComponent implements OnInit {
   hospitalMarkers = [];
   eZonesMarkers = [];
   landMarkMarkers = [];
+  CCTVMarkers = [];
 
   selectedMediaData = {
     audios: [],
@@ -269,6 +270,21 @@ export class AppComponent implements OnInit {
     private locationService: LocationService,
     private parseService: ParseService
   ) { }
+
+  toggleCCTVData() {
+    this.showCCTVData = !this.showCCTVData;
+    if (this.showCCTVData) {
+      for (var i = 0; i < this.CCTVMarkers.length; i++) {
+        this.CCTVMarkers[i].setMap(null);
+        if (this.CCTVMarkers.length === i + 1) {
+          this.CCTVMarkers = [];
+        }
+      }
+    } else {
+      this.refreshCCTVData();
+    }
+
+  };
 
   toggleVictimeData() {
     this.showVictimeData = !this.showVictimeData;
@@ -344,6 +360,9 @@ export class AppComponent implements OnInit {
     }
 
   };
+
+  
+ 
 
   toggleHospitalData() {
     this.showHospitalData = !this.showHospitalData;
@@ -456,6 +475,28 @@ export class AppComponent implements OnInit {
     this.geoXmanMarkers.push(marker);
   }
 
+  createCCTVMarker(place) {
+
+    var infowindow = new google.maps.InfoWindow({
+      content: this.locationService.createCCTVwindow(place)
+    });
+    const icon = {
+      url: './assets/images/hospital.png',
+      scaledSize: new google.maps.Size(30, 30)
+    };
+
+    var marker = new google.maps.Marker({
+      map: this.map,
+      position: { lat: place.lat, lng: place.lng },
+      icon: icon,
+      title: place.vname || 'SafeOne'
+    });
+    marker.addListener('click', function () {
+      infowindow.open(this.map, marker);
+    });
+    this.CCTVMarkers.push(marker);
+  }
+
   createPoliceStationMarker(place) {
 
     var infowindow = new google.maps.InfoWindow({
@@ -551,7 +592,7 @@ export class AppComponent implements OnInit {
 
     // Create subscription
     this.parseService.startSubscription().subscribe((data) => {
-      debugger
+    
       this.loadMarkes();
     });
 
@@ -565,6 +606,7 @@ export class AppComponent implements OnInit {
     this.refreshHospitalData();
     this.refreshLandmarkData();
     this.refreshEZonesData();
+    this.refreshCCTVData();
   }
 
   initialize() {
@@ -572,7 +614,7 @@ export class AppComponent implements OnInit {
     var myLatlng = new google.maps.LatLng(18.5204, 73.8567);
 
     var mapOptions = {
-      zoom: 8,
+      zoom: 13,
       center: myLatlng,
       // mapTypeId: google.maps.MapTypeId.ROADMAP
     };
@@ -676,6 +718,44 @@ export class AppComponent implements OnInit {
       this.locationService.getAllGeoXman().then((locations) => {
         for (var i = 0; i < locations.length; i++) {
           this.createGeoXmanMarker(locations[i]);
+        }
+        // Add a marker clusterer to manage the markers.
+        // var markerCluster = new MarkerClusterer(this.map, this.investigatorsMarkers, {
+        //   gridSize: 50,
+        //   styles: [{
+        //     textColor: 'white',
+        //     url: 'assets/images/investigator_clutser52x52.png',
+        //     height: 50,
+        //     width: 50
+        //   }],
+        //   maxZoom: 15
+        // });
+      });
+    });
+  }
+
+  refreshCCTVData() {
+
+    let prms = new Promise((resolve, reject) => {
+      if (this.CCTVMarkers.length === 0) {
+        return resolve();
+      }
+      for (var i = 0; i < this.CCTVMarkers.length; i++) {
+        this.CCTVMarkers[i].setMap(null);
+        if (this.CCTVMarkers.length === i + 1) {
+          this.CCTVMarkers = [];
+          return resolve();
+        }
+      }
+    });
+
+    prms.then(() => {
+
+      this.locationService.getAllCCTV().then((locations) => {
+console.log("aaaa",locations);
+
+        for (var i = 0; i < locations.length; i++) {
+          this.createCCTVMarker(locations[i]);
         }
         // Add a marker clusterer to manage the markers.
         // var markerCluster = new MarkerClusterer(this.map, this.investigatorsMarkers, {

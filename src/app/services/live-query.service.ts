@@ -31,34 +31,34 @@ export class ParseService {
     return Observable.create(observer => {
 
       this.subscription.on("open", (message) => {
-        debugger
+        // debugger
         console.log("Victim activity tracking mode activated");
         // TODO: Add to victims arrary
         observer.next(message);
       });
 
       this.subscription.on("create", (message) => {
-        debugger
+        // debugger
         console.log("New victim created");
         // TODO: Add to victims arrary
         observer.next(message);
       });
 
       this.subscription.on('update', (data) => {
-        debugger
+        // debugger
         console.log("Victim's data updated", data);
         // TODO: Victims data updated
         observer.next(data);
       });
 
       this.subscription.on('enter', (data) => {
-        debugger
+        // debugger
         console.log("Victim's data updated", data);
         observer.next(data);
       });
 
       this.subscription.on("leave", (obj) => {
-        debugger
+        // debugger
         console.log("Victim deleted");
         // TODO: Remove from victims arrary
         observer.next(obj);

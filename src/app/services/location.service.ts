@@ -56,7 +56,42 @@ export class LocationService {
 
   }
 
+  getAllCCTV(): Promise<any[]> {
 
+    return new Promise((resolve, reject) => {
+
+      var allCCTV = Parse.Object.extend("CCTV");
+      var query = new Parse.Query(allCCTV);
+
+      query.find({
+        success: function (results) {
+          if (results.length > 0) {
+            var CCTVList = [];
+            for (var i = 0; i < results.length; i++) {
+              var object = results[i];
+              var CCTV = {
+				        CCTVName: object.get("name"),
+                lat: object.get("location").latitude,
+                lng: object.get("location").longitude,
+                url: object.get("url")
+              }
+              CCTVList.push(CCTV);
+              if (results.length - 1 === i) {
+                return resolve(CCTVList);
+              }
+            }
+          }
+        },
+        error: function (error) {
+          console.log("Error: " + error.code + " " + error.message);
+          return reject(error);
+        }
+      });
+
+    });
+
+  }
+  
   getAllGeoXman(): Promise<any[]> {
 
     return new Promise((resolve, reject) => {
@@ -312,7 +347,29 @@ export class LocationService {
 
   }
 
+  createCCTVwindow(data) {
 
+    // CCTV video url
+    var contentString = '<div id="content">' +
+      //'<h4 id="firstHeading" class="firstHeading">XMan ID:- ' + data.XManID + '</h4>' +
+      '<h5 id="firstHeading" class="firstHeading">Name:- ' + data.CCTVName + '</h5><br/>' +
+      `<a class="d-block mb-4 h-100">
+          <video controls style="position: initial;">
+            <source [src]="`+ data.url +`" type="video/mp4">
+          </video>
+        </a>`+
+      //  '<h5 id="firstHeading" class="firstHeading">Address.:- ' + data.address + '</h5>' +
+      //  '<h5 id="firstHeading" class="firstHeading">State:- ' + data.state + '</h5>' +
+      '</div>';
+    // '<img src="' + data.image + '" alt="Mountain View" width="250" height="250" controls>' +
+    // '<video width="300" height="150" controls>' +
+    // '<source src="' + data.video + '" type="video/mp4">' +
+    // '<source src="' + data.video + '" type="video/ogg">' +
+    return contentString;
+
+  }
+
+ 
 
   createLandmarkswindow(data) {
     var contentString = '<div id="content">' +

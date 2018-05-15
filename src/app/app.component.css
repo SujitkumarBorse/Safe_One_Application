@@ -1,6 +1,10 @@
 #map {
-    width: 100%;
-    height: 550px;
+    margin-left: -18px;
+    margin-right: -19px;
+    margin-top: -6px;
+    margin-bottom: 18px;
+    height: 570px;
+    position: fixed;
 }
   
 #wrapper { 
@@ -8,9 +12,9 @@
 }
 
 .map-buttons {
-    padding: 10px;
-    background: black;
-    filter: opacity(70%);
+    padding: 3px;
+    /* background: black;
+    filter: opacity(70%); */
     border-radius: 5px;
 }
 
@@ -20,7 +24,7 @@
     z-index: 99; 
     width:100%;
     bottom: 0;
-    margin-bottom: 20px;
+    margin-bottom: 0px;
 }
 
 .a {    
